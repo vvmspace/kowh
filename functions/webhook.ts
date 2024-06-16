@@ -20,6 +20,7 @@ const sendTelegramMessage = async (chatId: string, text: string) => {
 
 export const sendAdminMessage = async (data: unknown) => {
     if (!TELEGRAM_ADMIN_CHAT_ID) {
+        console.log(data);
         return;
     }
     const text = typeof data === "string" ? data : JSON.stringify(data, null, 2);
