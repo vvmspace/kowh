@@ -28,7 +28,7 @@ export const sendAdminMessage = async (data: unknown) => {
 };
 
 export const handler: Handler = async (event, context) => {
-  await sendAdminMessage(event, context);
+  await sendAdminMessage({event, context});
   const bodyAsText = event.body;
   if (!bodyAsText) {
     return {
@@ -39,6 +39,20 @@ export const handler: Handler = async (event, context) => {
 
   const body = JSON.parse(bodyAsText);
   const chatId = body.message.chat.id;
+  const text = body.message.text;
+  const user = body.message.from;
+  const username = user.username;
+  const firstName = user.first_name;
+
+
+  if (text.includes("/start")) {
+    const referrerId = text.split(" ")[1];
+    await sendTelegramMessage(referrerId, `New user joined with your referral link: ${firstName} (@${username || chatId})`);
+    await sendTelegramMessage(chatId, `Invite your friends to earn rewards!
+Your link: https://t.me/KingOfTheHillGameBot?start=${chatId}`);
+  }
+
+
   const reply = JSON.stringify(body, null, 2);
 
   await sendTelegramMessage(chatId, reply);

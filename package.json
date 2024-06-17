@@ -9,6 +9,7 @@
   "dependencies": {
     "@netlify/functions": "^2.7.0",
     "@twa-dev/sdk": "^7.0.0",
+    "axios": "^1.7.2",
     "jsonwebtoken": "^9.0.2",
     "preact": "^10.20.0",
     "preact-iso": "^2.6.3",

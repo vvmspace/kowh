@@ -1,6 +1,5 @@
 import { Handler } from "@netlify/functions";
 import { verifyTelegramData } from "../../src/utils/auth/verify";
-import { sendAdminMessage } from "./webhook";
 import { sign } from "jsonwebtoken";
 
 const { TELEGRAM_BOT_TOKEN } = process.env as Record<string, string>;
