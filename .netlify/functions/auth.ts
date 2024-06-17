@@ -1,15 +1,13 @@
-import crypto from "crypto";
 import { Handler } from "@netlify/functions";
 import { verifyTelegramData } from "../../src/utils/auth/verify";
 import { sendAdminMessage } from "./webhook";
+import { sign } from "jsonwebtoken";
 
 const { TELEGRAM_BOT_TOKEN } = process.env as Record<string, string>;
 
 export const handler: Handler = async (event) => {
   const { rawQuery, queryStringParameters } = event;
   const isValid = await verifyTelegramData(rawQuery, TELEGRAM_BOT_TOKEN);
-
-  await sendAdminMessage({ queryStringParameters, isValid });
 
   if (!isValid) {
     return {
@@ -18,8 +16,16 @@ export const handler: Handler = async (event) => {
     };
   }
 
+  const user = JSON.parse(queryStringParameters?.user as string) as Record<string, string>;
+
+  const { id } = user;
+  const auth_token = sign({ id }, TELEGRAM_BOT_TOKEN);
+
   return {
     statusCode: 200,
-    body: "Webhook received",
+    body: JSON.stringify({ auth_token }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   };
 };
