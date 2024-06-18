@@ -75,10 +75,10 @@ export function Home() {
           </h2>
           <p>
             After every awake the King makes 10 steps and gets 1 coffee and 1
-            sandwich.<br /><b>Tap to wake up the King.</b>
+            sandwich.
           </p>
           <p>Steps: <b>{steps}</b></p>
-          {!awakable && (<p>Next awake: <MsToTime timeLeft={timeLeft} /></p>)}
+          <p class={'tap'}>{awakable && <>Tap me</> || <MsToTime timeLeft={timeLeft} />}</p>
         </a>
         {coffees > 0 && (
           <FoodCard
