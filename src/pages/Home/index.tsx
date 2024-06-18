@@ -10,9 +10,7 @@ export function Home() {
   const [coffees, setCoffees] = useState<number>(0);
   const [sandwiches, setSandwiches] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [inviteMessage, setInviteMessage] = useState(
-    "Invite your friends to join the King of The Hill!",
-  );
+  const [inviteMessage, setInviteMessage] = useState("");
   const [id, setId] = useState<string | null>(localStorage.getItem("id"));
   const [awakable, setAwakable] = useState<boolean>(false);
   const [nextAwake, setNextAwake] = useState<Date | null>(null);
@@ -27,6 +25,7 @@ export function Home() {
     setCoffees(king.coffees);
     setSandwiches(king.sandwiches);
     setNextAwake(nextAwake);
+    setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${king.telegramId}`)
   };
 
   function handleInvite() {
@@ -36,7 +35,7 @@ export function Home() {
     setInviteMessage("Copied to clipboard!");
     setTimeout(
       () =>
-        setInviteMessage("Invite your friends to join the King of The Hill!"),
+        setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${id}`),
       3000,
     );
   }
@@ -50,6 +49,7 @@ export function Home() {
         return setTop(res);
       });
       await updateKing();
+      setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${id}`);
     })();
   }, []);
 
@@ -111,11 +111,11 @@ export function Home() {
         </div>
         <a class="resource" onClick={handleInvite}>
           <h2>Invite your friends</h2>
-          <p>{inviteMessage}</p>
           <p>
-            Get 1 sandwich every time your friend wakes up the king, as well as
-            1 coffee from his friends
+            1 🥪 when your friend wakes up the King<br />
+            1 ☕ when his friend wakes up the King
           </p>
+          <p>{inviteMessage}</p>
         </a>
         <div class="resource">
           <h2>Top 10</h2>
