@@ -18,6 +18,7 @@ export function Home() {
   const [nextAwake, setNextAwake] = useState<Date | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(3600000);
   const [top, setTop] = useState<any[]>([]);
+  const isLocal = location.hostname === "localhost";
 
   const updateKing = async () => {
     const { user: king, nextAwake } = await getMe();
@@ -84,29 +85,30 @@ export function Home() {
             After every awake the King makes 10 steps and gets 1 coffee and 1
             sandwich.
           </p>
-          <p>
-            Steps: <b>{steps}</b>
-          </p>
           <p class={"tap"}>
             {(awakable && <>Tap me</>) || <MsToTime timeLeft={timeLeft} />}
           </p>
         </a>
-        {coffees > 0 && (
-          <FoodCard
-            icon="☕"
-            title="Coffee"
-            count={coffees}
-            onClick={() => useCoffee().then(updateKing)}
-          />
-        )}
-        {sandwiches > 0 && (
+        <div class="cards">
+        {(sandwiches > 0 || isLocal) && (
           <FoodCard
             icon="🥪"
             title="Sandwich"
             count={sandwiches}
+            steps={3}
             onClick={() => useSandwich().then(updateKing)}
           />
         )}
+        {(coffees > 0 || isLocal) && (
+          <FoodCard
+            icon="☕"
+            title="Coffee"
+            count={coffees}
+            steps={1}
+            onClick={() => useCoffee().then(updateKing)}
+          />
+        )}
+        </div>
         <a class="resource" onClick={handleInvite}>
           <h2>Invite your friends</h2>
           <p>{inviteMessage}</p>
@@ -146,9 +148,10 @@ function Resource(props) {
 function FoodCard(props) {
   return (
     <div class="food" onClick={props.onClick}>
-      <div>{props.icon}</div>
-      <div>{props.title}</div>
-      <div>{props.count}</div>
+      <div class="icon">{props.icon}</div>
+      <div class="name">{props.title}</div>
+      <div class="count">{props.count}</div>
+      <div class="steps">+{props.steps}</div>
     </div>
   );
 }

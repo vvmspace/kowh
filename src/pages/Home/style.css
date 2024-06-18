@@ -23,12 +23,66 @@ img:hover {
   border: 1px solid #777;
 }
 
+.cards {
+  display: block;
+}
+
 .food {
   padding: 0.5rem;
   border-radius: 0.5rem;
   border: 1px solid #777;
   text-align: center;
+  width: 5rem;
+  height: 5rem;
+  display: block;
+  float: left;
+  position: relative;
+  margin: 0.5rem;
 }
+
+.food .count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #000;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0 0.5rem 0 0.5rem;
+  font-size: 1rem;
+  width: 1rem;
+  height: 1.5rem;
+}
+
+.food .steps {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem 0 0.5rem 0;
+  font-size: 1rem;
+  width: 1rem;
+  height: 1.5rem;
+}
+
+.food .icon {
+  font-size: 3rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.food .name {
+  font-size: 1rem;
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0;
+  right: 0;
+}
+
 
 .food:hover, .food:focus, .food:active {
   border: 1px solid #f1f1f1;
