@@ -7,7 +7,7 @@ export function Footer() {
     <footer>
       <nav>
         <a href="/" class={url == "/" && "active"}>
-          Home
+          Play
         </a>
         <a href="https://t.me/c/2165342026/5" class={url == "/invite" && "active"}>
           Roadmap
