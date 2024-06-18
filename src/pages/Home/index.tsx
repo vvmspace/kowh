@@ -119,7 +119,7 @@ export function Home() {
           <h2>Top 10</h2>
           {top.map((user, i) => (
             <p>
-              {i + 1}. {user.telegramUsername || user.telegramId} - {user.steps} steps, {user.coffees} coffees, {user.sandwiches} sandwiches
+              {i + 1}. {user.languageCode && `[${user.languageCode}]` || ''} {user.telegramUsername || user.telegramId} - {user.steps} steps, {user.coffees} coffees, {user.sandwiches} sandwiches
             </p>
           ))}
         </div>
