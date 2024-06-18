@@ -17,22 +17,25 @@ export function Home() {
   const [timeLeft, setTimeLeft] = useState<number>(3600000);
   const [top, setTop] = useState<any[]>([]);
   const isLocal = location.hostname === "localhost";
+  const [king, setKing] = useState<any>({});
+  const [easterTaps, setEasterTaps] = useState(7);
 
   const updateKing = async () => {
     const { user: king, nextAwake } = await getMe();
+    setKing(king);
+    setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${king.telegramId}`)
     setId(king.telegramId);
     setSteps(king.steps);
     setCoffees(king.coffees);
     setSandwiches(king.sandwiches);
     setNextAwake(nextAwake);
-    setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${king.telegramId}`)
   };
 
   function handleInvite() {
     navigator.clipboard.writeText(
       `https://t.me/KingOfTheHillGameBot?start=${id}`,
     );
-    setInviteMessage("Copied to clipboard!");
+    setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${id} (Copied)`);
     setTimeout(
       () =>
         setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${id}`),
@@ -49,7 +52,6 @@ export function Home() {
         return setTop(res);
       });
       await updateKing();
-      setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${id}`);
     })();
   }, []);
 
@@ -65,6 +67,7 @@ export function Home() {
     if (!awakable) return;
 
     setAwakable(false);
+    setTimeLeft(3600000);
     const { nextAwake } = await awake();
     setNextAwake(nextAwake);
     await updateKing();
@@ -79,7 +82,7 @@ export function Home() {
       <section>
         <a target="_blank" class="resource" onClick={WakeUpKing}>
           <h2>
-            {awakable ? "Wake up the King" : "The King is climbing on the Hill"}
+            {awakable ? "Wake up the King" : "The King is climbing"}
           </h2>
           <p>
             After every awake the King makes 10 steps and gets 1 coffee and 1
@@ -117,7 +120,10 @@ export function Home() {
           </p>
           <p>{inviteMessage}</p>
         </a>
-        <div class="resource">
+        {easterTaps <= 0 && (<div class="resource">
+          <p>{JSON.stringify(king)}</p>
+        </div>)}
+        <div class="resource" onClick={() => setEasterTaps(easterTaps - 1)}>
           <h2>Top 10</h2>
           {top.map((user, i) => (
             <p>
