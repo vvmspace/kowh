@@ -28,6 +28,13 @@ img:hover {
   box-shadow: 0 25px 50px -12px #673ab888;
 }
 
+.tap {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
 @media (max-width: 639px) {
   .home section {
     margin-top: 5rem;

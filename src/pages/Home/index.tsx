@@ -77,8 +77,12 @@ export function Home() {
             After every awake the King makes 10 steps and gets 1 coffee and 1
             sandwich.
           </p>
-          <p>Steps: <b>{steps}</b></p>
-          <p class={'tap'}>{awakable && <>Tap me</> || <MsToTime timeLeft={timeLeft} />}</p>
+          <p>
+            Steps: <b>{steps}</b>
+          </p>
+          <p class={"tap"}>
+            {(awakable && <>Tap me</>) || <MsToTime timeLeft={timeLeft} />}
+          </p>
         </a>
         {coffees > 0 && (
           <FoodCard
@@ -99,7 +103,10 @@ export function Home() {
         <a class="resource" onClick={handleInvite}>
           <h2>Invite your friends</h2>
           <p>{inviteMessage}</p>
-          <p>Get 1 sandwich every time your friend wakes up the king, as well as 1 coffee from his friends</p>
+          <p>
+            Get 1 sandwich every time your friend wakes up the king, as well as
+            1 coffee from his friends
+          </p>
         </a>
       </section>
     </div>
@@ -131,7 +138,6 @@ function FoodCard(props) {
   );
 }
 
-
 function MsToTime(props) {
   const { timeLeft } = props;
 
@@ -139,9 +145,15 @@ function MsToTime(props) {
   const m = Math.floor((timeLeft / 1000 / 60) % 60);
   const s = Math.floor((timeLeft / 1000) % 60);
 
-  const hh = (h < 10) ? '0' + h : h;
-  const mm = (m < 10) ? '0' + m : m;
-  const ss = (s < 10) ? '0' + s : s;
+  const hh = h < 10 ? "0" + h : h;
+  const mm = m < 10 ? "0" + m : m;
+  const ss = s < 10 ? "0" + s : s;
 
-  return timeLeft > 0 ? (<span>{hh}:{mm}:{ss}</span>) : (<span>00:00:00</span>);
+  return timeLeft > 0 ? (
+    <span>
+      {hh}:{mm}:{ss}
+    </span>
+  ) : (
+    <span>00:00:00</span>
+  );
 }
