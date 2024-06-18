@@ -9,13 +9,16 @@ export function Footer() {
         <a href="/" class={url == "/" && "active"}>
           Home
         </a>
-        <a href="/invite" class={url == "/invite" && "active"}>
+        <a href="https://t.me/c/2165342026/5" class={url == "/invite" && "active"}>
+          Roadmap
+        </a>
+        <a href="/tasks" target="_blank" class={url == "/tasks" && "active"}>
           Tasks
         </a>
-        <a href="/invite" class={url == "/invite" && "active"}>
+        <a href="/top" class={url == "/top" && "active"}>
           Top
         </a>
-        <a href="/invite" class={url == "/invite" && "active"}>
+        <a href="/friends" class={url == "/friends" && "active"}>
           Friends
         </a>
       </nav>
