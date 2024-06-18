@@ -145,7 +145,7 @@ function Resource(props) {
 
 function FoodCard(props) {
   return (
-    <div onClick={props.onClick}>
+    <div class="food" onClick={props.onClick}>
       <div>{props.icon}</div>
       <div>{props.title}</div>
       <div>{props.count}</div>
