@@ -56,6 +56,8 @@ export function Home() {
   }, 1000);
 
   const WakeUpKing = async () => {
+    if (!awakable) return;
+    
     const { nextAwake } = await awake();
     setAwakable(false);
     setNextAwake(nextAwake);
