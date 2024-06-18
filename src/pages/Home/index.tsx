@@ -44,8 +44,11 @@ export function Home() {
     (async () => {
       WebApp.ready();
       setLoading(false);
+      await getTop().then((res) => {
+        console.log(res);
+        return setTop(res);
+      });
       await updateKing();
-      await getTop().then((res) => setTop(res));
     })();
   }, []);
 
@@ -112,6 +115,14 @@ export function Home() {
             1 coffee from his friends
           </p>
         </a>
+        <div class="resource">
+          <h2>Top 10</h2>
+          {top.map((user, i) => (
+            <p>
+              {i + 1}. {user.telegramUsername || user.telegramId} - {user.steps} steps, {user.coffees} coffees, {user.sandwiches} sandwiches
+            </p>
+          ))}
+        </div>
       </section>
     </div>
   );

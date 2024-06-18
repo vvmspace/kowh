@@ -1,4 +1,4 @@
-import { privateRequest } from "../../utils/request";
+import { privateRequest, publicRequest } from "../../utils/request";
 
 export const awake = async () => {
   const result = (await privateRequest("/api/awake", "POST")).data;
@@ -14,5 +14,5 @@ export const useSandwich = async () => {
 };
 
 export const getTop = async () => {
-  return (await privateRequest("/api/user")).data;
+  return (await publicRequest("/api/user")).data;
 };
