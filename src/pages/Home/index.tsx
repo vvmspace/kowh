@@ -13,7 +13,7 @@ export function Home() {
   const [inviteMessage, setInviteMessage] = useState("");
   const [id, setId] = useState<string | null>(localStorage.getItem("id"));
   const [awakable, setAwakable] = useState<boolean>(false);
-  const [nextAwake, setNextAwake] = useState<Date | null>(null);
+  const [nextAwake, setNextAwake] = useState<Date | null>(new Date(Date.now() + 3600000));
   const [timeLeft, setTimeLeft] = useState<number>(3600000);
   const [top, setTop] = useState<any[]>([]);
   const isLocal = location.hostname === "localhost";
