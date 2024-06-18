@@ -1,21 +1,18 @@
 import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
+import dotenv from "dotenv";
+dotenv.config();
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    preact({
-      prerender: {
-        enabled: true,
-        renderTarget: "#app",
-        additionalPrerenderRoutes: ["/404"],
-      },
-    }),
-  ],
+  plugins: [preact()],
   server: {
     proxy: {
-      "/.netlify": "https://koth.netlify.app",
+      "/api": {
+        target: process.env.API_URL || "http://13.51.56.89:3000/api",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
     },
-  }
-}
-);
+  },
+});

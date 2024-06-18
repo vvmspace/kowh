@@ -1,83 +1,113 @@
+import { getMe } from "../../api/auth";
+import { awake, useCoffee, useSandwich } from "../../api/game";
 import { privateRequest, publicRequest } from "../../utils/request";
 import "./style.css";
 import WebApp from "@twa-dev/sdk";
 import { useEffect, useState } from "preact/hooks";
 
 export function Home() {
-  const [awakes, setAwakes] = useState<number>(0);
+  const [steps, setSteps] = useState<number>(0);
+  const [coffees, setCoffees] = useState<number>(0);
+  const [sandwiches, setSandwiches] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [inviteMessage, setInviteMessage] = useState("Invite your friends to join the King of The Hill!");
+  const [inviteMessage, setInviteMessage] = useState(
+    "Invite your friends to join the King of The Hill!",
+  );
   const [id, setId] = useState<string | null>(localStorage.getItem("id"));
+  const [awakable, setAwakable] = useState<boolean>(false);
+  const [nextAwake, setNextAwake] = useState<Date | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+
+  const updateKing = async () => {
+    const { user: king, nextAwake } = await getMe();
+    setId(king.telegramId);
+    setSteps(king.steps);
+    setCoffees(king.coffees);
+    setSandwiches(king.sandwiches);
+    setNextAwake(nextAwake);
+  };
 
   function handleInvite() {
-		navigator.clipboard.writeText(`https://t.me/KingOfTheHillGameBot?start=${id}`);
-		setInviteMessage("Copied to clipboard!");
-		setTimeout(() => setInviteMessage("Invite your friends to join the King of The Hill!"), 3000);
-	}
+    navigator.clipboard.writeText(
+      `https://t.me/KingOfTheHillGameBot?start=${id}`,
+    );
+    setInviteMessage("Copied to clipboard!");
+    setTimeout(
+      () =>
+        setInviteMessage("Invite your friends to join the King of The Hill!"),
+      3000,
+    );
+  }
 
   useEffect(() => {
     (async () => {
       WebApp.ready();
-      const data = WebApp.initData;
-	  WebApp.CloudStorage.getItem("awakes", (err, value) => {
-		setAwakes(value ? parseInt(value) : 0);
-	  });
-      if (data && !id) {
-		const url = "/.netlify/functions/auth?" + data;
-		const { auth_token } = (await publicRequest(url)).data;
-		localStorage.setItem("authToken", auth_token);
-		const meResponse = await privateRequest("/.netlify/functions/me", "GET", null);
-		const id = meResponse.data.user.id;
-		setId(id);
-      }
-	  setLoading(false);
+      setLoading(false);
+      await updateKing();
     })();
   }, []);
 
-  function WakeUpKing() {
-	setAwakes(awakes + 1);
-	WebApp.CloudStorage.setItem("awakes", `${awakes + 1}`);
-  }
+  setInterval(() => {
+    const now = new Date();
+    const end = new Date(nextAwake);
+    const diff = end.getTime() - now.getTime();
+    setAwakable(diff <= 0);
+    setTimeLeft(diff);
+  }, 1000);
+
+  const WakeUpKing = async () => {
+    const { nextAwake } = await awake();
+    setAwakable(false);
+    setNextAwake(nextAwake);
+    await updateKing();
+  };
 
   return loading ? (
     <h1>loading...</h1>
   ) : (
     <div class="home">
       <h1>King of The Hill [Beta]</h1>
+      <p>We are working on this game. Just enjoy!</p>
       <section>
-        <Awaker
-          awakes={awakes}
-          title="Wake up the King"
-          description="Nothing will be saved, but wake the King!!"
-          onClick={WakeUpKing}
+        <a target="_blank" class="resource" onClick={WakeUpKing}>
+          <h2>
+            {awakable ? "Wake up the King" : "The King is climbing on the Hill"}
+          </h2>
+          <p>
+            After every awake the King makes 10 steps and gets 1 coffee and 1
+            sandwich
+          </p>
+          <p>Steps: {steps}</p>
+          <p>Next awake: <MsToTime timeLeft={timeLeft} /></p>
+        </a>
+        {coffees > 0 && (
+          <FoodCard
+            icon="☕"
+            title="Coffee"
+            count={coffees}
+            onClick={() => useCoffee().then(updateKing)}
+          />
+        )}
+        {sandwiches > 0 && (
+          <FoodCard
+            icon="🥪"
+            title="Sandwich"
+            count={sandwiches}
+            onClick={() => useSandwich().then(updateKing)}
+          />
+        )}
+        <Resource
+          title="Invite your friends"
+          description={inviteMessage}
+          description2={`Your link: https://t.me/KingOfTheHillGameBot?start=${id}`}
+          onClick={handleInvite}
         />
-		<Resource
-		  title="Invite your friends"
-		  description={inviteMessage}
-		  description2={`Your link: https://t.me/KingOfTheHillGameBot?start=${id}`}
-		  onClick={handleInvite}
-		/>
       </section>
     </div>
   );
 }
 
 function Resource(props) {
-	  return (
-	<a
-	  href={props.href}
-	  target="_blank"
-	  class="resource"
-	  onClick={props.onClick}
-	>
-	  <h2>{props.title}</h2>
-	  <p>{props.description}</p>
-	  <p>{props.description2}</p>
-	</a>
-  );
-}
-
-function Awaker(props) {
   return (
     <a
       href={props.href}
@@ -87,7 +117,32 @@ function Awaker(props) {
     >
       <h2>{props.title}</h2>
       <p>{props.description}</p>
-      <p>Awakes: {props.awakes}</p>
+      <p>{props.description2}</p>
     </a>
   );
+}
+
+function FoodCard(props) {
+  return (
+    <div onClick={props.onClick}>
+      <div>{props.icon}</div>
+      <div>{props.title}</div>
+      <div>{props.count}</div>
+    </div>
+  );
+}
+
+
+function MsToTime(props) {
+  const { timeLeft } = props;
+
+  const h = Math.floor(timeLeft / 1000 / 60 / 60);
+  const m = Math.floor((timeLeft / 1000 / 60) % 60);
+  const s = Math.floor((timeLeft / 1000) % 60);
+
+  const hh = (h < 10) ? '0' + h : h;
+  const mm = (m < 10) ? '0' + m : m;
+  const ss = (s < 10) ? '0' + s : s;
+
+  return timeLeft > 0 ? (<span>{hh}:{mm}:{ss}</span>) : (<span>00:00:00</span>);
 }
