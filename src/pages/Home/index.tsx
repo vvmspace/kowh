@@ -16,7 +16,7 @@ export function Home() {
   const [id, setId] = useState<string | null>(localStorage.getItem("id"));
   const [awakable, setAwakable] = useState<boolean>(false);
   const [nextAwake, setNextAwake] = useState<Date | null>(null);
-  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [timeLeft, setTimeLeft] = useState<number>(3600000);
   const [top, setTop] = useState<any[]>([]);
 
   const updateKing = async () => {
