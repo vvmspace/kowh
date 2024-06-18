@@ -78,7 +78,7 @@ export function Home() {
             sandwich
           </p>
           <p>Steps: {steps}</p>
-          <p>Next awake: <MsToTime timeLeft={timeLeft} /></p>
+          {!awakable && (<p>Next awake: <MsToTime timeLeft={timeLeft} /></p>)}
         </a>
         {coffees > 0 && (
           <FoodCard
