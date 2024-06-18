@@ -10,7 +10,13 @@ export function Footer() {
           Home
         </a>
         <a href="/invite" class={url == "/invite" && "active"}>
-          Invite
+          Tasks
+        </a>
+        <a href="/invite" class={url == "/invite" && "active"}>
+          Top
+        </a>
+        <a href="/invite" class={url == "/invite" && "active"}>
+          Friends
         </a>
       </nav>
     </footer>
