@@ -75,9 +75,9 @@ export function Home() {
           </h2>
           <p>
             After every awake the King makes 10 steps and gets 1 coffee and 1
-            sandwich
+            sandwich.<br /><b>Tap to wake up the King.</b>
           </p>
-          <p>Steps: {steps}</p>
+          <p>Steps: <b>{steps}</b></p>
           {!awakable && (<p>Next awake: <MsToTime timeLeft={timeLeft} /></p>)}
         </a>
         {coffees > 0 && (
@@ -96,12 +96,11 @@ export function Home() {
             onClick={() => useSandwich().then(updateKing)}
           />
         )}
-        <Resource
-          title="Invite your friends"
-          description={inviteMessage}
-          description2={`Your link: https://t.me/KingOfTheHillGameBot?start=${id}`}
-          onClick={handleInvite}
-        />
+        <a class="resource" onClick={handleInvite}>
+          <h2>Invite your friends</h2>
+          <p>{inviteMessage}</p>
+          <p>Get 1 sandwich every time your friend wakes up the king, as well as 1 coffee from his friends</p>
+        </a>
       </section>
     </div>
   );
