@@ -1,5 +1,5 @@
 import { getMe } from "../../api/auth";
-import { awake, useCoffee, useSandwich } from "../../api/game";
+import { awake, getTop, useCoffee, useSandwich } from "../../api/game";
 import { privateRequest, publicRequest } from "../../utils/request";
 import "./style.css";
 import WebApp from "@twa-dev/sdk";
@@ -17,6 +17,7 @@ export function Home() {
   const [awakable, setAwakable] = useState<boolean>(false);
   const [nextAwake, setNextAwake] = useState<Date | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [top, setTop] = useState<any[]>([]);
 
   const updateKing = async () => {
     const { user: king, nextAwake } = await getMe();
@@ -44,6 +45,7 @@ export function Home() {
       WebApp.ready();
       setLoading(false);
       await updateKing();
+      await getTop().then((res) => setTop(res));
     })();
   }, []);
 
@@ -57,7 +59,7 @@ export function Home() {
 
   const WakeUpKing = async () => {
     if (!awakable) return;
-    
+
     const { nextAwake } = await awake();
     setAwakable(false);
     setNextAwake(nextAwake);

@@ -12,3 +12,7 @@ export const useCoffee = async () => {
 export const useSandwich = async () => {
   return (await privateRequest("/api/food/sandwich")).data;
 };
+
+export const getTop = async () => {
+  return (await privateRequest("/api/user")).data;
+};
