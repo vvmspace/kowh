@@ -5,6 +5,13 @@ import "./style.css";
 import WebApp from "@twa-dev/sdk";
 import { useEffect, useState } from "preact/hooks";
 
+const sms = 1000;
+const mms = 60 * sms;
+const hms = 60 * mms;
+const dms = 24 * hms;
+
+const ddiff = (t1: Date, t2: Date = new Date()) => t1.getTime() - t2.getTime();
+
 export function Home() {
   const [steps, setSteps] = useState<number>(0);
   const [coffees, setCoffees] = useState<number>(0);
@@ -19,6 +26,7 @@ export function Home() {
   const isLocal = location.hostname === "localhost";
   const [king, setKing] = useState<any>({});
   const [easterTaps, setEasterTaps] = useState(7);
+  const [lastBonus, setLastBonus] = useState();
 
   const updateKing = async () => {
     const { user: king, nextAwake } = await getMe();
@@ -28,6 +36,7 @@ export function Home() {
     setSteps(king.steps);
     setCoffees(king.coffees);
     setSandwiches(king.sandwiches);
+    setLastBonus(new Date(king.lastBonus));
     setNextAwake(nextAwake);
   };
 
@@ -111,7 +120,15 @@ export function Home() {
             title="Coffee"
             count={coffees}
             steps={1}
-            onClick={() => useCoffee().then(updateKing)}
+            onClick={() => useCoffee().then(updateKing)}xs
+          />
+        )}
+        {(!lastBonus || (ddiff(lastBonus) > -dms)) && (
+          <FoodCard
+            icon="🎁"
+            title="Daily Bonus"
+            count={1}
+            onClick={() => privateRequest("/api/food/bonus").then(updateKing)}
           />
         )}
         </div>
@@ -139,28 +156,13 @@ export function Home() {
   );
 }
 
-function Resource(props) {
-  return (
-    <a
-      href={props.href}
-      target="_blank"
-      class="resource"
-      onClick={props.onClick}
-    >
-      <h2>{props.title}</h2>
-      <p>{props.description}</p>
-      <p>{props.description2}</p>
-    </a>
-  );
-}
-
 function FoodCard(props) {
   return (
     <div class="food" onClick={props.onClick}>
       <div class="icon">{props.icon}</div>
       <div class="name">{props.title}</div>
       <div class="count">{props.count}</div>
-      <div class="steps">+{props.steps}</div>
+      {props.steps && (<div class="steps">+{props.steps}</div>)}
     </div>
   );
 }
