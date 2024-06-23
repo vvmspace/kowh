@@ -26,7 +26,7 @@ export function Home() {
   const isLocal = location.hostname === "localhost";
   const [king, setKing] = useState<any>({});
   const [easterTaps, setEasterTaps] = useState(7);
-  const [lastBonus, setLastBonus] = useState();
+  const [lastBonus, setLastBonus] = useState<Date | null>(null);
 
   const updateKing = async () => {
     const { user: king, nextAwake } = await getMe();
@@ -36,7 +36,7 @@ export function Home() {
     setSteps(king.steps);
     setCoffees(king.coffees);
     setSandwiches(king.sandwiches);
-    setLastBonus(new Date(king.lastBonus));
+    setLastBonus(king.lastBonus ? new Date(king.lastBonus) : null);
     setNextAwake(nextAwake);
   };
 
@@ -123,10 +123,10 @@ export function Home() {
             onClick={() => useCoffee().then(updateKing)}xs
           />
         )}
-        {(!lastBonus || (ddiff(lastBonus) > -dms)) && (
+        {(!lastBonus || (ddiff(new Date(), lastBonus) > dms)) && (
           <FoodCard
             icon="🎁"
-            title="Daily Bonus"
+            title={lastBonus ? ddiff(new Date(), lastBonus) : "Daily bonus"}
             count={1}
             onClick={() => privateRequest("/api/food/bonus").then(updateKing)}
           />
@@ -147,7 +147,7 @@ export function Home() {
           <h2>Top 10</h2>
           {top.map((user, i) => (
             <p>
-              {i + 1}. {user.languageCode && `[${user.languageCode}]` || ''} {user.telegramUsername || user.telegramId} - {user.steps} steps, {user.coffees} coffees, {user.sandwiches} sandwiches
+              {i + 1}. {user.languageCode && `[${user.languageCode}]` || ''} {user.telegramUsername || user.telegramId} - {user.steps} steps, {user.coffees} ☕, {user.sandwiches} 🥪
             </p>
           ))}
         </div>
