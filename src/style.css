@@ -13,6 +13,11 @@
   -webkit-text-size-adjust: 100%;
 }
 
+:root {
+  color: #ccc;
+  background-color: #1a1a1a;
+}
+
 body {
   margin: 0;
   margin-bottom: 3rem;
@@ -63,12 +68,5 @@ main {
 @media (max-width: 639px) {
   main {
     margin: 2rem;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #ccc;
-    background-color: #1a1a1a;
   }
 }

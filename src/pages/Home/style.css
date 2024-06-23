@@ -23,6 +23,14 @@ img:hover {
   border: 1px solid #777;
 }
 
+.resource {
+  color: #ccc;
+  background-color: #161616;
+}
+
+.resource:hover {
+  border: 1px solid #bbb;
+}
 .cards {
   display: block;
 }
@@ -100,6 +108,13 @@ img:hover {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 2rem;
+  background-color: #777;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.tap.active {
+  background-color: firebrick;
 }
 
 @media (max-width: 639px) {
@@ -110,12 +125,4 @@ img:hover {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .resource {
-    color: #ccc;
-    background-color: #161616;
-  }
-  .resource:hover {
-    border: 1px solid #bbb;
-  }
-}
+

@@ -1,5 +1,7 @@
 import { getMe } from "../../api/auth";
 import { awake, getTop, useCoffee, useSandwich } from "../../api/game";
+import { FoodCard } from "../../components/FoodCart";
+import { MsToTime } from "../../components/MsToTime";
 import { privateRequest, publicRequest } from "../../utils/request";
 import "./style.css";
 import WebApp from "@twa-dev/sdk";
@@ -44,6 +46,11 @@ export function Home() {
     navigator.clipboard.writeText(
       `https://t.me/KingOfTheHillGameBot?start=${id}`,
     );
+    navigator.share({
+      title: "King of The Hill",
+      text: "Join the game",
+      url: `https://t.me/KingOfTheHillGameBot?start=${id}`,
+    });
     setInviteMessage(`https://t.me/KingOfTheHillGameBot?start=${id} (Copied)`);
     setTimeout(
       () =>
@@ -82,6 +89,15 @@ export function Home() {
     await updateKing();
   };
 
+  function maskUsername(name) {
+      if (!isNaN(parseInt(name))) {
+        return '***' + name.slice(-4);
+      }
+
+      return name.slice(0, 3) + '***';
+  }
+  
+
   return loading ? (
     <h1>loading...</h1>
   ) : (
@@ -100,7 +116,7 @@ export function Home() {
           <p>
             Steps: <b>{steps}</b>
           </p>
-          <p class={"tap"}>
+          <p class={"tap" + (awakable && " active" || "")}>
             {(awakable && <>Tap me</>) || <MsToTime timeLeft={timeLeft} />}
           </p>
         </a>
@@ -126,7 +142,7 @@ export function Home() {
         {(!lastBonus || (ddiff(new Date(), lastBonus) > dms)) && (
           <FoodCard
             icon="🎁"
-            title={lastBonus ? ddiff(new Date(), lastBonus) : "Daily bonus"}
+            title={"Daily bonus"}
             count={1}
             onClick={() => privateRequest("/api/food/bonus").then(updateKing)}
           />
@@ -147,7 +163,7 @@ export function Home() {
           <h2>Top 10</h2>
           {top.map((user, i) => (
             <p>
-              {i + 1}. {user.languageCode && `[${user.languageCode}]` || ''} {user.telegramUsername || user.telegramId} - {user.steps} steps, {user.coffees} ☕, {user.sandwiches} 🥪
+              {i + 1}. {user.languageCode && `[${user.languageCode}]` || ''} {maskUsername(user.telegramUsername || user.telegramId)} - {user.steps} steps{user.coffees && `, ${user.coffees} ☕` || ''}{user.sandwiches && `, ${user.sandwiches} 🥪` || ''}
             </p>
           ))}
         </div>
@@ -155,34 +171,4 @@ export function Home() {
     </div>
   );
 }
-
-function FoodCard(props) {
-  return (
-    <div class="food" onClick={props.onClick}>
-      <div class="icon">{props.icon}</div>
-      <div class="name">{props.title}</div>
-      <div class="count">{props.count}</div>
-      {props.steps && (<div class="steps">+{props.steps}</div>)}
-    </div>
-  );
-}
-
-function MsToTime(props) {
-  const { timeLeft } = props;
-
-  const h = Math.floor(timeLeft / 1000 / 60 / 60);
-  const m = Math.floor((timeLeft / 1000 / 60) % 60);
-  const s = Math.floor((timeLeft / 1000) % 60);
-
-  const hh = h < 10 ? "0" + h : h;
-  const mm = m < 10 ? "0" + m : m;
-  const ss = s < 10 ? "0" + s : s;
-
-  return timeLeft > 0 ? (
-    <span>
-      {hh}:{mm}:{ss}
-    </span>
-  ) : (
-    <span>00:00:00</span>
-  );
-}
+``
